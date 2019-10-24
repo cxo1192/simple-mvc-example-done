@@ -219,7 +219,7 @@ const setDogName = (req, res) => {
     name,
     breed: req.body.breed,
     age: req.body.age,
-    //createdDate: Date.now,
+    // createdDate: Date.now,
   };
 
   // create a new object of CatModel with the object to save
@@ -316,8 +316,8 @@ const updateLast = (req, res) => {
 
 // find dog and increase age
 const searchDogNameAndUpdate = (req, res) => {
-  //console.log(req.body);
-  //console.log(req.body);
+  // console.log(req.body);
+  // console.log(req.body);
   if (!req.body.nameSearch || !req.body.ageAdd) {
     return res.json({ error: 'Name, and Age is required' });
   }
@@ -337,16 +337,16 @@ const searchDogNameAndUpdate = (req, res) => {
     // if a match, send the match back
     // return res.json({ name: doc.name, beds: doc.bedsOwned });
     // doc.age += req.query.ageAdd;
-    const newDogData = {
-      name: doc.name,
-      breed: doc.breed,
-      age: doc.age + req.body.addAge,
-      createdDate: doc.createdDate,
-    };
+    // const newDogData = {
+    //   name: doc.name,
+    //   breed: doc.breed,
+    //   age: doc.age + req.body.addAge,
+    //   createdDate: doc.createdDate,
+    // };
 
-    const newDoc = new Dog(newDogData);
+    const tempDog = doc;
 
-    const savePromise = newDoc.save();
+    const savePromise = tempDog.save();
 
     // send back the name as a success for now
     savePromise.then(() => res.json({ name: doc.name, breed: doc.breed, age: doc.age }));
