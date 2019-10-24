@@ -345,6 +345,7 @@ const searchDogNameAndUpdate = (req, res) => {
     // };
 
     const tempDog = doc;
+    tempDog.age += parseInt(req.body.ageAdd, 10);
 
     const savePromise = tempDog.save();
 
@@ -352,7 +353,7 @@ const searchDogNameAndUpdate = (req, res) => {
     savePromise.then(() => res.json({ name: doc.name, breed: doc.breed, age: doc.age }));
 
     // if save error, just return an error for now
-    savePromise.catch(res.json({ err }));
+    savePromise.catch(() => res.json({ err }));
     return res;
   });
 };
