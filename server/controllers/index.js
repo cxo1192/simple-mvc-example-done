@@ -52,6 +52,17 @@ const readAllCats = (req, res, callback) => {
   Cat.find(callback);
 };
 
+const readAllDogs = (req, res, callback) => {
+  // Call the model's built in find function and provide it a
+  // callback to run when the query is complete
+  // Find has several versions
+  // one parameter is just the callback
+  // two parameters is JSON of search criteria and callback.
+  // That limits your search to only things that match the criteria
+  // The find function returns an array of matching objects
+  Dog.find(callback);
+};
+
 
 // function to find a specific cat on request.
 // Express functions always receive the request and the response.
@@ -122,13 +133,16 @@ const hostPage3 = (req, res) => {
 };
 
 const hostPage4 = (req, res) => {
-  // res.render takes a name of a page to render.
-  // These must be in the folder you specified as views in your main app.js file
-  // Additionally, you don't need .jade because you registered the file type
-  // in the app.js as jade. Calling res.render('index')
-  // actually calls index.jade. A second parameter of JSON can be passed
-  // into the jade to be used as variables with #{varName}
-  res.render('page4');
+  const callback = (err, docs) => {
+    if (err) {
+      return res.json({ err }); // if error, return it
+    }
+
+    // return success
+    return res.render('page4', { dogs: docs });
+  };
+
+  readAllDogs(req, res, callback);
 };
 
 // function to handle get request to send the name
@@ -205,7 +219,7 @@ const setDogName = (req, res) => {
     name,
     breed: req.body.breed,
     age: req.body.age,
-    createdDate: Date.now,
+    //createdDate: Date.now,
   };
 
   // create a new object of CatModel with the object to save
@@ -302,11 +316,13 @@ const updateLast = (req, res) => {
 
 // find dog and increase age
 const searchDogNameAndUpdate = (req, res) => {
-  if (!req.query.nameSearch || !req.query.ageAdd) {
+  //console.log(req.body);
+  //console.log(req.body);
+  if (!req.body.nameSearch || !req.body.ageAdd) {
     return res.json({ error: 'Name, and Age is required' });
   }
 
-  return Dog.findByName(req.query.nameSearch, (err, doc) => {
+  return Dog.findByName(req.body.nameSearch, (err, doc) => {
     // errs, handle them
     if (err) {
       return res.json({ err }); // if error, return it
@@ -324,7 +340,7 @@ const searchDogNameAndUpdate = (req, res) => {
     const newDogData = {
       name: doc.name,
       breed: doc.breed,
-      age: doc.age + req.query.addAge,
+      age: doc.age + req.body.addAge,
       createdDate: doc.createdDate,
     };
 
